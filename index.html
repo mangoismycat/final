@@ -1,0 +1,325 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Junehee</title>
+    <link rel="stylesheet" href="main.css">
+</head>
+<style>
+    /* 기본 이미지 스타일 */
+    img {
+        max-width: 100%; /* 이미지는 부모 요소의 너비에 맞게 조정됨 */
+        height: auto; /* 가로세로 비율 유지 */
+    }
+
+    /* 미디어 쿼리 */
+    @media (min-width: 768px) {
+        /* 768px 이상의 뷰포트에 대한 스타일 */
+        img {
+/*             max-width: 50%; /* 이미지는 최대 너비의 50%까지만 표시 */ */
+/*             float: right; /* 이미지를 우측으로 정렬 */ */
+            max-width: 100%;
+        }
+    }
+</style>
+<script>
+    // 페이지가 로드되면 이벤트 리스너 추가
+document.addEventListener('DOMContentLoaded', (event) => {
+    // 1. 네비게이션 링크 클릭 시 부드럽게 스크롤
+    document.querySelectorAll('nav ul li a').forEach(anchor => {
+        anchor.addEventListener('click', function (e) {
+            e.preventDefault();
+            document.querySelector(this.getAttribute('href')).scrollIntoView({
+                behavior: 'smooth'
+            });
+        });
+    });
+
+    // 2. 페이지 스크롤 시 헤더 배경색 변경
+    window.addEventListener('scroll', () => {
+        const header = document.querySelector('header');
+        if (window.scrollY > 50) {
+            header.style.backgroundColor = '#222';
+        } else {
+            header.style.backgroundColor = '#333';
+        }
+    });
+
+    // 3. 작업물에 마우스 오버 시 효과
+    document.querySelectorAll('.grid-item').forEach(item => {
+        item.addEventListener('mouseover', () => {
+            item.style.transform = 'translateY(-10px)';
+            item.style.boxShadow = '0 6px 12px rgba(0, 0, 0, 0.2)';
+        });
+        item.addEventListener('mouseout', () => {
+            item.style.transform = 'translateY(0)';
+            item.style.boxShadow = '0 2px 4px rgba(0, 0, 0, 0.1)';
+        });
+    });
+
+    // 4. 폼 제출 시 경고창 표시
+    document.getElementById('contactForm').addEventListener('submit', (e) => {
+        e.preventDefault();
+        alert('Thank you for your message!');
+        // 폼 초기화
+        e.target.reset();
+    });
+
+    // 5. 현재 시간 표시
+    const footer = document.querySelector('footer p #lastUpdated');
+    const date = new Date();
+    footer.textContent = `${date.toLocaleDateString()} at ${date.toLocaleTimeString()}`;
+
+    // 6. 페이지 로드 시 환영 메시지 표시
+    alert('Welcome to Junehee portfolio!');
+
+    // 7. 섹션 진입 시 페이드 인 효과
+    const sections = document.querySelectorAll('section');
+    const options = {
+        threshold: 0.1
+    };
+
+    const observer = new IntersectionObserver((entries, observer) => {
+        entries.forEach(entry => {
+            if (entry.isIntersecting) {
+                entry.target.classList.add('fade-in');
+                observer.unobserve(entry.target);
+            }
+        });
+    }, options);
+
+    sections.forEach(section => {
+        observer.observe(section);
+    });
+
+    // 8. 타이핑 효과
+    const typingEffect = document.createElement('div');
+    typingEffect.id = 'typingEffect';
+    typingEffect.style.fontFamily = 'monospace';
+    typingEffect.style.fontSize = '1.5em';
+    typingEffect.style.marginTop = '10px';
+    document.querySelector('.header-content').appendChild(typingEffect);
+
+    const text = "Creating Beautiful & Functional Designs";
+    let index = 0;
+
+    function type() {
+        if (index < text.length) {
+            typingEffect.textContent += text.charAt(index);
+            index++;
+            setTimeout(type, 100);
+        }
+    }
+
+    type();
+
+    // 9. 그리드 아이템 클릭 시 모달 창 표시
+    const gridItems = document.querySelectorAll('.grid-item');
+    const modal = document.createElement('div');
+    const modalContent = document.createElement('div');
+    const modalClose = document.createElement('span');
+
+    modal.id = 'myModal';
+    modal.style.display = 'none';
+    modal.style.position = 'fixed';
+    modal.style.zIndex = '1000';
+    modal.style.left = '0';
+    modal.style.top = '0';
+    modal.style.width = '100%';
+    modal.style.height = '100%';
+    modal.style.overflow = 'auto';
+    modal.style.backgroundColor = 'rgba(0, 0, 0, 0.4)';
+    
+    modalContent.style.backgroundColor = '#fefefe';
+    modalContent.style.margin = '15% auto';
+    modalContent.style.padding = '20px';
+    modalContent.style.border = '1px solid #888';
+    modalContent.style.width = '80%';
+    modalContent.style.borderRadius = '8px';
+
+    modalClose.innerHTML = '&times;';
+    modalClose.style.color = '#aaa';
+    modalClose.style.float = 'right';
+    modalClose.style.fontSize = '28px';
+    modalClose.style.fontWeight = 'bold';
+    modalClose.style.cursor = 'pointer';
+
+    modalContent.appendChild(modalClose);
+    modal.appendChild(modalContent);
+    document.body.appendChild(modal);
+
+    gridItems.forEach(item => {
+        item.addEventListener('click', () => {
+            modalContent.innerHTML = `<span style="color:#aaa;float:right;font-size:28px;font-weight:bold;cursor:pointer;">&times;</span><p>${item.textContent}</p>`;
+            modal.style.display = 'block';
+        });
+    });
+
+    modalClose.onclick = function() {
+        modal.style.display = 'none';
+    };
+
+    window.onclick = function(event) {
+        if (event.target == modal) {
+            modal.style.display = 'none';
+        }
+    };
+});
+
+</script>
+<body>
+    <header>
+        <nav>
+            <ul>
+                <li><a href="#about">About</a></li>
+                <li><a href="#skills">Skills</a></li>
+                <li><a href="#work">Work</a></li>
+                <li><a href="#testimonials">Testimonials</a></li>
+                <li><a href="#contact">Contact</a></li>
+            </ul>
+        </nav>
+<!--         <div class="header-content">
+            <h1>Designer Portfolio</h1>
+            <p class="subtitle">Creating Beautiful & Functional Designs</p>
+        </div> -->
+    </header>
+
+    <main>
+        <section id="main_img">
+            <div class="content-wrapper">
+                <div class="first_img">
+                <picture>
+                    <source media="(min-width: 768px)" srcset="images/bigcat.png">
+                    <img src="images/smallcat.png" alt="small_image">
+                </picture>
+                </div>          
+            </div>
+        </section>
+
+        <section id="about">
+            <div class="content-wrapper">
+                <h2>Junehee, the Designer</h2>
+                <p>Hello, I'm a designer specializing in web and graphic design. I love creating beautiful and functional designs.</p>
+                <p>I have a passion for exploring new trends and techniques in design, ensuring that every project I work on is fresh, innovative, and effective. With a background in both web and graphic design, I have the skills and knowledge to bring your vision to life, whether it be through a website, a branding package, or any other creative endeavor.</p>
+                <p>안녕하세요, 저는 아름답고 기능적인 디자인을 좋아합니다.</p>
+            </div>
+        </section>
+
+        <section id="skills">
+            <div class="content-wrapper">
+                <h2>My Skills</h2>
+                <p>I have these skills. </p>
+                <ul class="skills-list">
+                    <li>HTML & CSS</li>
+                    <li>JavaScript</li>
+                    <li>React</li>
+                    <li>Photoshop</li>
+                    <li>Illustrator</li>
+                    <li>FT-IR</li>
+                </ul>
+            </div>
+        </section>
+
+        <section id="work">
+            <div class="content-wrapper">
+                <h2>My Work</h2>
+                <div class="grid-container">
+                    <div class="grid-item">
+                        <img src="images/green.png" alt="">
+                        <h3>Green</h3>
+                        <p>
+                            In the embrace of dawn's tender breath, green whispers secrets of life, painting the world with hope and the promise of endless renewal.</p>
+                    </div>
+                    <div class="grid-item">
+                        <img src="images/red.png" alt="">
+                        <h3>Red</h3>
+                        <p>
+                            Red dances through the twilight like a fervent flame, igniting the sky with passion and the pulse of untamed desire.</p></div>
+                    <div class="grid-item">
+                        <img src="images/black.png" alt="">
+                        <h3>Black</h3>
+                        <p>
+                            Black drapes the night in velvet mystery, where shadows weave their silent tales in the depths of infinite possibility.</p></div>
+                    <div class="grid-item">
+                        <img src="images/camellias.png" alt="">
+                        <h3>camellias</h3>
+                        <p>Camellias blush in delicate splendor, their petals unfolding like whispered secrets in the garden of dreams.</p></div>
+                    <div class="grid-item">
+                        <img src="images/flower.png" alt="">
+                        <h3>Flower</h3>
+                        <p>A flower breathes in the sun's tender kiss, unfurling its petals in a silent ode to the beauty and fragility of life.
+                        </p></div>
+                    <div class="grid-item">
+                        <img src="images/drop.png" alt="">
+                        <h3>Drop</h3>
+                        <p>
+                            A dropped flower rests gently upon the earth, a poignant testament to fleeting beauty and the quiet grace of impermanence.</p></div>
+                    <div class="grid-item">
+                        <img src="images/sorrow.png" alt="">
+                        <h3>Sorrow</h3>
+                        <p>Sorrow weaves its tender threads through the heart, a melancholic symphony echoing the silent ache of dreams left unfulfilled.</p></div>
+                    <div class="grid-item">
+                        <img src="images/ginkgo.png" alt="">
+                        <h3>Ginkgo</h3>
+                        <p>Ginkgo leaves flutter like golden whispers in the wind, ancient sentinels of time's passage and the quiet endurance of nature's grace.</p></div>
+                    <div class="grid-item">
+                        <img src="images/why.png" alt="">
+                        <h3>Why</h3>
+                        <p></p></div>
+                    <div class="grid-item">
+                        <img src="images/catandcandle.png" alt="">
+                        <h3>Cat and Candle</h3>
+                        <p></p></div>
+                    <div class="grid-item">
+                        <img src="images/freckles.png" alt="">
+                        <h3>Freckles</h3>
+                        <p>Freckles scatter across the skin like constellations, tiny specks of stardust that tell the story of a unique and radiant beauty.</p></div>
+                    <div class="grid-item">
+                        <img src="images/ophelia.png" alt="">
+                        <h3>Ophelia</h3>
+                        <p>Ophelia drifts in the water's tender embrace, her sorrow-laden soul intertwined with the lilies, a tragic poem of lost innocence and undying love.</p></div>
+                </div>
+            </div>
+        </section>
+        <section id="testimonials">
+            <div class="content-wrapper">
+                <h2>Testimonials</h2>
+                <div class="testimonials-container">
+                    <div class="testimonial">
+                        <p>"Junehee is a fantastic designer! Brought our vision to life perfectly."</p>
+                        <p><strong>- Client A</strong></p>
+                    </div>
+                    <div class="testimonial">
+                        <p>"Miss Kim is highly professional and talented. Would definitely hire again."</p>
+                        <p><strong>- Client B</strong></p>
+                    </div>
+                    <div class="testimonial">
+                        <p>"She exceeded our expectations in every way. Outstanding work!"</p>
+                        <p><strong>- Client C</strong></p>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <section id="contact">
+            <div class="content-wrapper">
+                <h2>Contact Me</h2>
+                <form id="contactForm">
+                    <label for="name">Name:</label>
+                    <input type="text" id="name" name="name" required>
+                    <label for="email">Email:</label>
+                    <input type="email" id="email" name="email" required>
+                    <label for="message">Message:</label>
+                    <textarea id="message" name="message" required></textarea>
+                    <button type="submit">Send</button>
+                </form>
+            </div>
+        </section>
+    </main>
+
+    <footer>
+        <p>&copy; 2024 Designer Portfolio. All rights reserved. Last updated on <span id="lastUpdated"></span></p>
+    </footer>
+</body>
+</html>
